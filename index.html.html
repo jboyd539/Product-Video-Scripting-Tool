@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneAdvanced — Video Script Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f7f7f5;
+      --bg-tertiary: #f0efe9;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --text-muted: #9a9a9a;
+      --border: rgba(0,0,0,0.12);
+      --border-hover: rgba(0,0,0,0.22);
+      --accent: #1a1a1a;
+      --accent-text: #ffffff;
+      --success: #2d7a4f;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1c;
+        --bg-secondary: #252525;
+        --bg-tertiary: #2e2e2e;
+        --text-primary: #f0f0ee;
+        --text-secondary: #a0a09a;
+        --text-muted: #6a6a66;
+        --border: rgba(255,255,255,0.12);
+        --border-hover: rgba(255,255,255,0.22);
+        --accent: #f0f0ee;
+        --accent-text: #1c1c1c;
+        --success: #4ade80;
+      }
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      background: var(--accent);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark i { color: var(--accent-text); font-size: 20px; }
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .field label .opt {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9a9a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+    textarea { min-height: 72px; resize: vertical; line-height: 1.5; }
+    select:focus, input:focus, textarea:focus { border-color: var(--border-hover); }
+    select:hover, input:hover, textarea:hover { border-color: var(--border-hover); }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 10px 22px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.82; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-secondary {
+      background: none;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--bg-secondary); }
+
+    .status-msg { font-size: 13px; color: var(--text-secondary); }
+    .status-error { color: #c0392b; }
+
+    /* Output */
+    .output-card { display: none; }
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .output-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .btn-copy {
+      background: none;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      padding: 7px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-copy:hover { background: var(--bg-secondary); }
+    .copy-ok { color: var(--success); }
+
+    .script-box {
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 560px;
+      overflow-y: auto;
+    }
+
+    /* Extras */
+    .extras {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .btn-extra {
+      background: none;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-extra:hover { background: var(--bg-secondary); color: var(--text-primary); }
+    .btn-extra:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Spinner */
+    .spinner {
+      width: 15px; height: 15px;
+      border: 2px solid var(--accent-text);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Divider */
+    hr { border: none; border-top: 0.5px solid var(--border); margin: 0; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 500px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: 1; }
+      .page-header h1 { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div class="logo-mark"><i class="ti ti-video"></i></div>
+    <div>
+      <h1>Video script generator</h1>
+      <p>Fill in your brief and generate a production-ready script to attach to your ClickUp request.</p>
+    </div>
+  </div>
+
+  <!-- Brief form -->
+  <div class="card">
+    <div class="card-title">Your brief</div>
+    <div class="form-grid">
+
+      <div class="field">
+        <label for="vtype">Video type</label>
+        <select id="vtype">
+          <option value="">Select…</option>
+          <option>Demo</option>
+          <option>Promo</option>
+          <option>Ad</option>
+          <option>Feature release</option>
+          <option>Onboarding / explainer</option>
+          <option>Sales outreach</option>
+          <option>Combo</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="sector">Sector</label>
+        <select id="sector">
+          <option value="">Select…</option>
+          <option>Healthcare</option>
+          <option>Legal</option>
+          <option>Social Care</option>
+          <option>Education</option>
+          <option>Government</option>
+          <option>Housing</option>
+          <option>Business Services</option>
+          <option>Manufacturing</option>
+          <option>Retail</option>
+          <option>Passenger Transportation</option>
+          <option>Wholesale and Logistics</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="product">Product / platform</label>
+        <input type="text" id="product" placeholder="e.g. Advanced Law, IQ, NHS 111…" />
+      </div>
+
+      <div class="field">
+        <label for="persona">Primary viewer / persona</label>
+        <input type="text" id="persona" placeholder="e.g. Practice Manager at a law firm" />
+      </div>
+
+      <div class="field full">
+        <label for="value">Value proposition — what's the single biggest benefit?</label>
+        <textarea id="value" placeholder="In your own words — what outcome does this product deliver for this audience?"></textarea>
+      </div>
+
+      <div class="field full">
+        <label for="pain">Main pain before using this product <span class="opt">(optional)</span></label>
+        <textarea id="pain" placeholder="What problem were they living with before?" style="min-height:56px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="tone">Tone <span class="opt">(optional)</span></label>
+        <select id="tone">
+          <option value="">Select…</option>
+          <option>Professional / trusted</option>
+          <option>Energetic / modern</option>
+          <option>Authoritative</option>
+          <option>Warm / human</option>
+          <option>Comedy / bold</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="duration">Target duration <span class="opt">(optional)</span></label>
+        <select id="duration">
+          <option value="">Select…</option>
+          <option>15s teaser</option>
+          <option>30s</option>
+          <option>45s</option>
+          <option>60s</option>
+          <option>90s</option>
+          <option>2 min+</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="placement">Where will it live? <span class="opt">(optional)</span></label>
+        <select id="placement">
+          <option value="">Select…</option>
+          <option>LinkedIn</option>
+          <option>YouTube ads</option>
+          <option>Website hero</option>
+          <option>Sales deck</option>
+          <option>Email</option>
+          <option>Social media</option>
+          <option>Multiple / TBC</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="cta">Desired CTA <span class="opt">(optional)</span></label>
+        <select id="cta">
+          <option value="">Select…</option>
+          <option>Book a demo</option>
+          <option>Visit a page</option>
+          <option>Try free</option>
+          <option>Awareness only</option>
+          <option>Comment for more info</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label for="proof">Stats, social proof, or customer wins <span class="opt">(optional)</span></label>
+        <input type="text" id="proof" placeholder="e.g. 4,000+ law firms, 80% of UK Top 200, a specific customer win…" />
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="genBtn" onclick="generateScript()">
+        <i class="ti ti-sparkles" style="font-size:16px;"></i>
+        Generate script
+      </button>
+      <button class="btn-secondary" onclick="clearForm()">Clear</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="card output-card" id="outputCard">
+    <div class="output-header">
+      <h2>Generated script</h2>
+      <button class="btn-copy" id="copyBtn" onclick="copyScript()">
+        <i class="ti ti-copy" style="font-size:14px;"></i>
+        Copy to clipboard
+      </button>
+    </div>
+    <div class="script-box" id="scriptOutput"></div>
+    <div class="extras">
+      <button class="btn-extra" id="teaserBtn" onclick="requestExtra('teaser')">
+        <i class="ti ti-cut" style="font-size:14px;"></i>15s teaser cut
+      </button>
+      <button class="btn-extra" id="hookBtn" onclick="requestExtra('hook')">
+        <i class="ti ti-refresh" style="font-size:14px;"></i>Alternative hook
+      </button>
+      <button class="btn-extra" id="linkedinBtn" onclick="requestExtra('linkedin')">
+        <i class="ti ti-brand-linkedin" style="font-size:14px;"></i>LinkedIn post copy
+      </button>
+    </div>
+  </div>
+
+  <div class="footer">OneAdvanced &middot; Video Script Generator &middot; Powered by Claude</div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `You are an expert SaaS video scriptwriter specialising in OneAdvanced. You know the company deeply, its sectors, products, and brand voice. You have studied 50 of the most viral SaaS videos ever made and know exactly what structures, hooks, and formulas work.
+
+## FORMULA SELECTION
+Based on the video type and placement, choose the optimal formula:
+
+DEMO VIDEOS:
+- DEMO-1 (Live Action + Demo): [Intro]→[Solution]→[Demo: Use Case]→[End Result]→[Outro] — LinkedIn product launches, 60–90s
+- DEMO-2 (Feature Deep Dive): [Intro]→[Quick Demo]→[More Use Cases]→[Outro] — feature releases, 30–45s
+- DEMO-3 (Website Hero): [Intro]→[Promise]→[Demo: Step-by-Step]→[Features]→[Outro] — website, 90–120s
+
+PROMO VIDEOS:
+- PROMO-1 (Dream Outcome): [Dream Outcome]→[Solution]→[Demo: How It Works]→[Use Cases]→[Outro]
+- PROMO-2 (Problem Hook): [Hook: Problem]→[Solution]→[Use Cases]→[Dream Outcome]→[Outro] — cold audiences
+- PROMO-3 (Don't Tell, Just Show): [Hook]→[Dream Outcome]→[Demo Use Cases]→[Outro]
+- PROMO-4 (Challenge + Social Proof): [Hook: Challenge]→[Dream Outcome]→[Social Proof]→[Demo Use Cases]→[New Features]→[CTA]
+
+AD VIDEOS:
+- AD-1 (Classic): [Hook: Problem]→[Solution]→[How It Works]→[Dream Outcome]→[CTA] — 30–45s
+- AD-2 (Dream Hook): [Dream Outcome]→[Solution]→[Demo Use Cases]→[Offer]→[CTA] — 25–35s
+- AD-3 (One Idea): [Solution]→[The Feature/Use Case]→[CTA] — 15–20s
+
+FEATURE RELEASE:
+- FEAT-1: [Intro]→[Demo]→[Use Cases]→[CTA] — 30–45s
+- FEAT-2: [Dream Outcome]→[Solution]→[Demo Use Cases]→[New Features]→[Demo]→[CTA] — 60–90s
+
+ONBOARDING/EXPLAINER:
+- ONBOARD-1: [Intro]→[Promise]→[Demo: Step 1]→[Step 2]→[Step 3]→[End Result]→[CTA] — 60–120s
+
+## GOLDEN RULES
+1. Show, don't tell — demonstrate use cases through product UI/demo
+2. One use case per video — focus wins
+3. Lead with value early — viewer should "get it" within 10 seconds
+4. 45 seconds is the sweet spot for most promo/ad content
+5. Demo is the most important block — even a 20s teaser needs a glimpse of the real product
+6. Avoid screencasting language — write for custom UI animation
+7. Social proof is powerful — include stats or testimonials if provided
+8. No abstractions — no generic icons, characters shaking hands, or sphere animations. Real UIs, real workflows
+
+## BRAND KNOWLEDGE
+OneAdvanced is the UK's Intelligent System of Work — powering highly regulated and mission-critical service sectors. The flagship platform is IQ, which brings together people, data, and sovereign AI in one connected platform. Three defining capabilities: Connected, Trusted, Intelligent.
+
+Key proof points: Named #1 Europe's Best Employer 2025 (Financial Times). Most Innovative Software Company 2026 (Computing AI & Software Development Awards). 35+ years of UK sector experience. Sovereign AI (UK-hosted). 1.5M calls managed for NHS 111 every month. 4,000+ legal practices powered daily. 2M+ learners supported daily. 80% of UK Top 200 law firms use OneAdvanced Legal.
+
+## TONE GUIDELINES
+- Healthcare: Calm, authoritative, human. Emphasise patient outcomes and NHS compliance.
+- Legal: Professional, precise, confident. Emphasise compliance, sovereignty, and revenue/billable time.
+- Education: Warm, enabling. Emphasise learner outcomes, staff time savings, and simplicity.
+- Social Care: Warm, compassionate, practical. Emphasise carer time, compliance, and resident outcomes.
+- Government/Housing: Authoritative, efficient, secure. Emphasise compliance, audit-readiness, cost savings.
+- Business Services/Manufacturing/Retail/Logistics: Punchy, commercial, ROI-focused. Emphasise speed, accuracy, profitability.
+
+## SCRIPT BIBLE INSIGHTS
+1. The Hook is everything — first 3–5 seconds must stop the scroll.
+2. Problem → Painkiller contrast — exaggerate the pain state, then make the solution feel like relief.
+3. One use case per video — focus on ONE thing.
+4. The Demo is proof — every video needs a glimpse of the real UI.
+5. Sound and music = 50% of virality — always include music direction in production notes.
+6. Live action + animation = best of both worlds.
+7. Use [Prompt → Result] demo structure — show someone typing a query → the system responding.
+8. 45s is the new 60s — attention spans have shortened.
+9. CTA placement — match CTA to funnel stage.
+10. Mirror the intro and outro — echo your opener at the end.
+11. On LinkedIn: lead with announcement energy, not problem hooks.
+
+## OUTPUT FORMAT
+Use EXACTLY this format:
+
+VIDEO TITLE: [Working title]
+TYPE: [Video type]
+FORMULA USED: [Formula code + name]
+DURATION: [Target duration]
+PLACEMENT: [Where it will live]
+PERSONA: [Who is watching]
+TONE: [Tone selected]
+
+---
+
+SCRIPT
+======
+
+[BLOCK NAME — e.g. HOOK / PROBLEM / SOLUTION / DEMO / FEATURES / CTA]
+
+VOICEOVER (VO):
+"[Spoken script here]"
+
+ON SCREEN TEXT:
+[Text displayed on screen]
+
+VISUAL DIRECTION:
+[Specific, production-ready visual instruction]
+
+---
+
+[Repeat block structure for each section]
+
+---
+
+PRODUCTION NOTES:
+• [Music mood, pacing, UI style, special notes — 2–4 bullets]`;
+
+let lastScript = '';
+let lastBrief = '';
+
+async function generateScript() {
+  const vtype    = document.getElementById('vtype').value;
+  const sector   = document.getElementById('sector').value;
+  const product  = document.getElementById('product').value.trim();
+  const value    = document.getElementById('value').value.trim();
+
+  if (!vtype || !sector || !product || !value) {
+    const s = document.getElementById('statusMsg');
+    s.textContent = 'Please fill in video type, sector, product, and value proposition.';
+    s.className = 'status-msg status-error';
+    return;
+  }
+
+  const persona   = document.getElementById('persona').value.trim();
+  const pain      = document.getElementById('pain').value.trim();
+  const tone      = document.getElementById('tone').value;
+  const duration  = document.getElementById('duration').value;
+  const placement = document.getElementById('placement').value;
+  const cta       = document.getElementById('cta').value;
+  const proof     = document.getElementById('proof').value.trim();
+
+  lastBrief = `VIDEO BRIEF:
+- Video type: ${vtype}
+- Sector: ${sector}
+- Product/Platform: ${product}
+- Primary viewer/persona: ${persona || 'Not specified'}
+- Value proposition: ${value}
+- Main pain point (before): ${pain || 'Not specified'}
+- Tone: ${tone || 'Not specified'}
+- Target duration: ${duration || 'Not specified'}
+- Placement: ${placement || 'Not specified'}
+- Desired CTA: ${cta || 'Not specified'}
+- Stats/social proof: ${proof || 'None provided'}
+
+Please generate a full production-ready script using the most appropriate formula. Tell me which formula you chose and why in one sentence before the script begins.`;
+
+  const btn = document.getElementById('genBtn');
+  const statusMsg = document.getElementById('statusMsg');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating…';
+  statusMsg.textContent = '';
+  statusMsg.className = 'status-msg';
+  document.getElementById('outputCard').style.display = 'none';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: lastBrief }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(b => b.text || '').join('') || '';
+    if (!text) throw new Error('Empty response');
+
+    lastScript = text;
+    document.getElementById('scriptOutput').textContent = text;
+    document.getElementById('outputCard').style.display = 'block';
+    document.getElementById('copyBtn').innerHTML = '<i class="ti ti-copy" style="font-size:14px;"></i> Copy to clipboard';
+    document.getElementById('outputCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setExtrasDisabled(false);
+  } catch (err) {
+    statusMsg.textContent = 'Something went wrong — please try again.';
+    statusMsg.className = 'status-msg status-error';
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px;"></i> Generate script';
+  }
+}
+
+async function requestExtra(type) {
+  if (!lastScript) return;
+
+  const prompts = {
+    teaser: 'Based on the script above, write a 15-second social teaser cut — a shortened version built from the best 2–3 visual moments. Use the same script format.',
+    hook: 'Based on the script above, write an alternative hook/opening — a different first 5–10 seconds to A/B test. Explain briefly why this variation works differently.',
+    linkedin: 'Based on the script above, write a short LinkedIn post to accompany this video. Keep it punchy, announcement-led (not problem-hook), under 150 words. Include a suggested emoji and 3 hashtags.'
+  };
+
+  const btnId = { teaser: 'teaserBtn', hook: 'hookBtn', linkedin: 'linkedinBtn' }[type];
+  const btn = document.getElementById(btnId);
+  const orig = btn.innerHTML;
+  setExtrasDisabled(true);
+  btn.innerHTML = '…';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [
+          { role: 'user', content: lastBrief },
+          { role: 'assistant', content: lastScript },
+          { role: 'user', content: prompts[type] }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(b => b.text || '').join('') || '';
+    if (text) {
+      const divider = '\n\n' + '─'.repeat(44) + '\n\n';
+      lastScript = lastScript + divider + text;
+      document.getElementById('scriptOutput').textContent = lastScript;
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setExtrasDisabled(false);
+    btn.innerHTML = orig;
+  }
+}
+
+function setExtrasDisabled(val) {
+  ['teaserBtn','hookBtn','linkedinBtn'].forEach(id => {
+    document.getElementById(id).disabled = val;
+  });
+}
+
+function copyScript() {
+  if (!lastScript) return;
+  navigator.clipboard.writeText(lastScript).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.innerHTML = '<i class="ti ti-check" style="font-size:14px;"></i> <span class="copy-ok">Copied!</span>';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="ti ti-copy" style="font-size:14px;"></i> Copy to clipboard';
+    }, 2200);
+  });
+}
+
+function clearForm() {
+  ['vtype','sector','tone','duration','placement','cta'].forEach(id => document.getElementById(id).value = '');
+  ['product','persona','value','pain','proof'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('outputCard').style.display = 'none';
+  document.getElementById('statusMsg').textContent = '';
+  lastScript = '';
+  lastBrief = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
